@@ -1,0 +1,38 @@
+(**************************************************************)
+(*                                                            *)
+(*      This file is managed by ocp-autoconf                  *)
+(*  Remove it from `manage_files` in 'ocp-autoconf.config'    *)
+(*  if you want to modify it manually (or use 'opam.trailer') *)
+(*                                                            *)
+(**************************************************************)
+
+opam-version: "1.2"
+maintainer: "Pierrick Couderc <pierrick.couderc@ocamlpro.com>"
+authors: [
+  "Pierrick Couderc <pierrick.couderc@ocamlpro.com>"
+]
+homepage: "http://www.typerex.org/"
+dev-repo: "https://github.com/OCamlPro/ocp-typechecker.git"
+bug-reports: "https://github.com/OCamlPro/ocp-typechecker/issues"
+build: [
+  [     "./configure"
+    "--prefix"
+    "%{prefix}%"
+    "--with-ocamldir"
+    "%{prefix}%/lib"
+    "--with-metadir"
+    "%{prefix}%/lib"
+  ]
+  [ make ]
+]
+install: [
+  [ make "install" ]
+]
+remove: [
+  [ "rm" "-f" "%{prefix}%/bin/ocp-typechecker"   ]
+]
+depends: [
+     "ocamlfind"
+     "ocp-build" {>= "1.99.17-beta" }
+]
+available: [ocaml-version >= "4.02.0" && ocaml-version < "4.03.0"]

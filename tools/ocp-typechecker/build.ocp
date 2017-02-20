@@ -1,0 +1,64 @@
+(**************************************************************************)
+(*                                                                        *)
+(*   Typerex Tools                                                        *)
+(*                                                                        *)
+(*   Copyright 2011-2017 OCamlPro SAS                                     *)
+(*                                                                        *)
+(*   All rights reserved.  This file is distributed under the terms of    *)
+(*   the GNU General Public License version 3 described in the file       *)
+(*   LICENSE.                                                             *)
+(*                                                                        *)
+(**************************************************************************)
+
+comp += [ "-bin-annot" "-g" ]
+link += [ "-g" ]
+
+begin library "ocaml-compiler-namespace";
+  install = false
+  files = [ "oCaml.ml" (comp += [ "-no-alias-deps" "-w" "-49" ])];
+  requires = [ "compiler-libs.common" "compiler-libs.bytecomp" ];
+end
+
+begin library "ocplib-typecheck"
+    install = false
+    files = [
+        (* We need a way to rename files to allow better dependencies
+           computation *)
+        (* "typecheck.ml" (comp += [ "-no-alias-deps" "-w" "-49" ]) *)
+        "typecheck_result.ml"
+        "typecheck_iO.ml"
+          "typecheck_uf.ml"
+          "typecheck_flags.ml"
+          "typecheck_pretty.ml"
+          "typecheck_ctype.ml" (* OCaml's Ctype with debugging informations *)
+          "typecheck_utils.ml"
+          "typecheck_types.ml"
+          "typecheck_typing.ml"
+          "typecheck_typecore2.ml" (* Cherry-picked functions from ocaml's
+                                      typecore that are not exported *)
+          "typecheck_typexpr.ml"
+          "typecheck_typedecl.ml"
+          "typecheck_expr.ml"
+          "typecheck_class.ml"
+          "typecheck_typemod.ml"
+          "typecheck_report.ml"
+          "typecheck_args.ml" (pp = "ocp-pp")
+          "typecheck.ml" (comp += [ "-no-alias-deps" "-w" "-49" ])
+      ]
+      requires = [ "ocaml-compiler-namespace" ]
+end
+
+begin program "ocp-typechecker"
+    files = [
+          "typecheck_main.ml" ]
+        requires = [
+        "ocplib-typecheck"
+        ]
+end
+
+    (*
+begin program "cmi2mli";
+  files = [ "cmi2mli.ml" ];
+  requires = [ "ocaml-namespace" ];
+end
+    *)
